@@ -6,8 +6,8 @@ import spacy
 from tqdm import tqdm
 from mordecai import Geoparser
 geo = Geoparser()
-df = pd.read_excel("Pub_abstract.xlsx")
-df = df.dropna(subset=['abstract'])
+df = pd.read_excel("Pub_overview.xlsx")
+df = df.dropna(subset=['publication_title'])
 parsed_list = []
 titles = []
 abstracts = []
@@ -19,7 +19,7 @@ words = []
 countrys = []
 for i in tqdm(range(0,len(df))):
     try:
-        abs = df['abstract'].iloc[i]
+        abs = df['publication_title'].iloc[i]
         doc = geo.geoparse(abs)
         for single_place in doc:
             lons.append(single_place["geo"]['lon'])
@@ -34,9 +34,9 @@ for i in tqdm(range(0,len(df))):
         continue
 
 df2 =  pd.DataFrame(data={"place_name": words,"lon": lons,"lat": lats, "word": words, "title": titles, "country": countrys, "paperId": paperIds})
-df2.to_json('encoded_scholar.json', orient= 'records')
-df2.to_csv('encoded_scholar.csv',index = False)
-df2.to_excel("'encoded_scholar.xlsx'")
+df2.to_json('encoded_title.json', orient= 'records')
+df2.to_csv('encoded_title.csv',index = False)
+df2.to_excel("encoded_title.xlsx")
 
 
 
